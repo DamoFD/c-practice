@@ -60,6 +60,7 @@ int main()
             fread(&usr, sizeof(struct user), 1, fp);
             fclose(fp);
             if (!strcmp(pword, usr.password)){
+                printf("\n\tWelcome %s", usr.phone);
                 while(cont == 'y'){
                     system("clear");
                     printf("\nPress 1 for balance inquiry");
@@ -120,7 +121,20 @@ int main()
                                     }
                                 }
                             }
+                            break;
+                        case 5:
+                            printf("\nPlease enter your new password:\t");
+                            scanf("%s", pword);
+                            fp = fopen(filename, "w");
+                            strcpy(usr.password, pword);
+                            fwrite(&usr, sizeof(struct user), 1, fp);
+                            if(fwrite != NULL)
+                            printf("\nPassword successfully changed!");
+                            break;
+                        default:
+                            printf("\nInvalid option!");
                         }
+
 
                     printf("\nDo you want to continue the transaction? [y/n]\t");
                     scanf("%s", &cont);
