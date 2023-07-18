@@ -97,26 +97,30 @@ int main()
                             scanf("%s", phone);
                             printf("\nPlease enter the amount to transfer:\t");
                             scanf("%f", &amount);
-                            if(amount > usr.balance) printf("\nInsufficient balance!");
+                            strcpy(filename, phone);
+                            fp = fopen(strcat(filename, ".dat"), "r");
+                            if(fp == NULL) printf("\nAccount number not found!\n");
                             else {
-                                strcpy(filename, phone);
-                                fp = fopen(strcat(filename, ".dat"), "r");
                                 fread(&usr1, sizeof(struct user), 1, fp);
                                 fclose(fp);
-                                fp = fopen(filename, "w");
-                                usr1.balance += amount;
-                                fwrite(&usr1, sizeof(struct user), 1 ,fp);
-                                fclose(fp);
-                                if(fwrite != NULL) {
-                                    printf("\nSuccessfully transferred $%.2f to %s", amount, phone);
-                                    strcpy(filename, usr.phone);
-                                    fp = fopen(strcat(filename, ".dat"), "w");
-                                    usr.balance -= amount;
-                                    fwrite(&usr, sizeof(struct user), 1, fp);
+                                if(amount > usr.balance) printf("\nInsufficient balance!");
+                                else {
+
+                                    fp = fopen(filename, "w");
+                                    usr1.balance += amount;
+                                    fwrite(&usr1, sizeof(struct user), 1 ,fp);
                                     fclose(fp);
+                                    if(fwrite != NULL) {
+                                        printf("\nSuccessfully transferred $%.2f to %s", amount, phone);
+                                        strcpy(filename, usr.phone);
+                                        fp = fopen(strcat(filename, ".dat"), "w");
+                                        usr.balance -= amount;
+                                        fwrite(&usr, sizeof(struct user), 1, fp);
+                                        fclose(fp);
+                                    }
                                 }
                             }
-                    }
+                        }
 
                     printf("\nDo you want to continue the transaction? [y/n]\t");
                     scanf("%s", &cont);
