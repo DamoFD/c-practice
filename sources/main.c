@@ -12,7 +12,7 @@ struct user {
 int main()
 {
 
-    struct user usr;
+    struct user usr, usr1;
     FILE *fp;
     char filename[50], phone[50], pword[50];
     int opt, choice;
@@ -72,7 +72,7 @@ int main()
 
                     switch(choice){
                         case 1:
-                            printf("\nYour current balance is Rs.%.2f",usr.balance);
+                            printf("\nYour current balance is $%.2f",usr.balance);
                             break;
                         case 2:
                             printf("\nEnter the amount:\t");
@@ -92,6 +92,30 @@ int main()
                             if(fwrite != NULL) printf("\nSuccessfully withdrawn.");
                             fclose(fp);
                             break;
+                        case 4:
+                            printf("\nPlease enter the phone number to transfer the balance:\t");
+                            scanf("%s", phone);
+                            printf("\nPlease enter the amount to transfer:\t");
+                            scanf("%f", &amount);
+                            if(amount > usr.balance) printf("\nInsufficient balance!");
+                            else {
+                                strcpy(filename, phone);
+                                fp = fopen(strcat(filename, ".dat"), "r");
+                                fread(&usr1, sizeof(struct user), 1, fp);
+                                fclose(fp);
+                                fp = fopen(filename, "w");
+                                usr1.balance += amount;
+                                fwrite(&usr1, sizeof(struct user), 1 ,fp);
+                                fclose(fp);
+                                if(fwrite != NULL) {
+                                    printf("\nSuccessfully transferred $%.2f to %s", amount, phone);
+                                    strcpy(filename, usr.phone);
+                                    fp = fopen(strcat(filename, ".dat"), "w");
+                                    usr.balance -= amount;
+                                    fwrite(&usr, sizeof(struct user), 1, fp);
+                                    fclose(fp);
+                                }
+                            }
                     }
 
                     printf("\nDo you want to continue the transaction? [y/n]\t");
